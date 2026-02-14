@@ -1,7 +1,7 @@
 ---
 title: "PS270 Final Project"
 author: "Autumn Lee"
-description: "My final project"
+description: "My final project for ps270"
 output: 
   distill::distill_article:
     self_contained: false
