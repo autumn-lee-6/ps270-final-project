@@ -13,15 +13,16 @@ output:
 
 I am interested in exploring data related to judges, potentially elections in certain states, campaigns, and other related types of data.
 
-##Project Milestone 2
-
 My research question is how does the presence of an Attorney General (AG)/Attorney from the Department of Justice (DOJ) affect whether the Supreme Court upholds or strikes down a statutory provision? My hypothesis is that if an AG/DOJ attorney is present during a Supreme Court hearing and decision, the Supreme Court will be more likely to uphold a statutory provision, as the Attorney General/DOJ attorney holds influence over the court to a certain degree and are usually arguing for a statutory provision, rather than against it. My explanatory variable is ATT GEN, which denotes if an attorney from the DOJ presented arguments at the hearing. My outcome variable is EFFECT, and the possible outcomes are upheld (the court upholds an already standing law/decision), struck down as applied (the court does not uphold the standing law/decision for this specfic case only), or struck down on face (the court does not uphold the standing law/decision overall in all cases). If cases where ATT GEN = 1 and EFFECT = upheld.
 
 ```{r}
 library(readxl)
+library(tidyverse)
 ```
 
 ```{r}
 judicial <- read_xlsx("/Users/autumnlee/PS-270-Final-Proj/judicial_review_of_congress_database_1789-2022.xlsx")
+
+head(judicial)
 ```
 
