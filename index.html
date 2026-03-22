@@ -116,7 +116,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/judicial_review_of_congress_database_1789-2022.xlsx","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js","judicial_review_of_congress_database_1789-2022.xlsx"]}
+  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.30/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/judicial_review_of_congress_database_1789-2022.xlsx","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js","judicial_review_of_congress_database_1789-2022.xlsx"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1544,21 +1544,54 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 
 <div class="d-article">
-<h2 id="project-thoughts">Project thoughts</h2>
+<h2 id="milestone-1-project-thoughts">Milestone 1: Project thoughts</h2>
 <p>I am interested in exploring data related to judges, potentially elections in certain states, campaigns, and other related types of data.</p>
-<p>##Project Milestone 2</p>
+<h2 id="milestone-2">Milestone 2</h2>
 <p>My research question is how does the presence of an Attorney General (AG)/Attorney from the Department of Justice (DOJ) affect whether the Supreme Court upholds or strikes down a statutory provision? My hypothesis is that if an AG/DOJ attorney is present during a Supreme Court hearing and decision, the Supreme Court will be more likely to uphold a statutory provision, as the Attorney General/DOJ attorney holds influence over the court to a certain degree and are usually arguing for a statutory provision, rather than against it. My explanatory variable is ATT GEN, which denotes if an attorney from the DOJ presented arguments at the hearing. My outcome variable is EFFECT, and the possible outcomes are upheld (the court upholds an already standing law/decision), struck down as applied (the court does not uphold the standing law/decision for this specfic case only), or struck down on face (the court does not uphold the standing law/decision overall in all cases). If cases where ATT GEN = 1 and EFFECT = upheld.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://readxl.tidyverse.org'>readxl</a></span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://readxl.tidyverse.org'>readxl</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>judicial</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readxl.tidyverse.org/reference/read_excel.html'>read_xlsx</a></span><span class='op'>(</span><span class='st'>"/Users/autumnlee/PS-270-Final-Proj/judicial_review_of_congress_database_1789-2022.xlsx"</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>judicial</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readxl.tidyverse.org/reference/read_excel.html'>read_xlsx</a></span><span class='op'>(</span><span class='st'>"/Users/autumnlee/PS-270-Final-Proj/judicial_review_of_congress_database_1789-2022.xlsx"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>judicial</span><span class='op'>)</span></span></code></pre>
 </div>
+<pre><code># A tibble: 6 × 27
+  CASE           CITATION DATE   YEAR DECADE DECISION DECISION2 EFFECT
+  &lt;chr&gt;          &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt; 
+1 United States… *54 U.S… 2/17…  1794   1790        2         1 struc…
+2 Penhallow v. … 003 U.S… 2/24…  1795   1790        0         0 upheld
+3 Hylton v. Uni… 003 U.S… 3/8/…  1796   1790        0         0 upheld
+4 United States… 003 U.S… 8/11…  1796   1790        0         0 upheld
+5 Mossman v. Hi… 004 U.S… 8/11…  1800   1800        1         1 struc…
+6 Marbury v. Ma… 005 U.S… 2/24…  1803   1800        2         1 struc…
+# ℹ 19 more variables: `STAT NAME` &lt;chr&gt;, `STAT CITE` &lt;chr&gt;,
+#   `PL #` &lt;chr&gt;, `S-DATE` &lt;chr&gt;, `TIME TO DECISION` &lt;dbl&gt;,
+#   CONGRESS &lt;dbl&gt;, AREA1 &lt;chr&gt;, AREA2 &lt;dbl&gt;, LNDMRK &lt;dbl&gt;,
+#   LNDDTL &lt;dbl&gt;, `ATT GEN` &lt;dbl&gt;, CERT &lt;dbl&gt;, REVERSD &lt;dbl&gt;,
+#   CRS &lt;dbl&gt;, `GVT PRTY` &lt;dbl&gt;, DISSENT &lt;dbl&gt;, `H-CT` &lt;dbl&gt;,
+#   caseId.SCDB &lt;chr&gt;, `JRC caseID` &lt;chr&gt;</code></pre>
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<h2 id="milestone-3">Milestone 3</h2>
+<p>INSTRUCTIONS: This milestone requires that your website loads the data you have selected, does some data cleaning and produces one interesting and polished data visualization. This could either show the distribution of one variable or the relationship between two variables.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>milestone_3</span> <span class='op'>&lt;-</span> <span class='va'>judicial</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>`ATT GEN`</span>, <span class='va'>`EFFECT`</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>n<span class='op'>=</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span>, .groups <span class='op'>=</span> <span class='st'>"drop"</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>mapping <span class='op'>=</span></span>
+<span>           <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>`ATT GEN`</span>, y <span class='op'>=</span> <span class='va'>`EFFECT`</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>          <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>milestone_3</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-3-1.png" alt="" width="624" /></p>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
