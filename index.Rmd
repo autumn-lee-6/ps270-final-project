@@ -9,11 +9,11 @@ output:
 
 
 
-## Milestone 1: Project thoughts
+### Milestone 1: Project thoughts
 
 I am interested in exploring data related to judges, potentially elections in certain states, campaigns, and other related types of data.
 
-## Milestone 2
+### Milestone 2
 
 My research question is how does the presence of an Attorney General (AG)/Attorney from the Department of Justice (DOJ) affect whether the Supreme Court upholds or strikes down a statutory provision? My hypothesis is that if an AG/DOJ attorney is present during a Supreme Court hearing and decision, the Supreme Court will be more likely to uphold a statutory provision, as the Attorney General/DOJ attorney holds influence over the court to a certain degree and are usually arguing for a statutory provision, rather than against it. My explanatory variable is ATT GEN, which denotes if an attorney from the DOJ presented arguments at the hearing. My outcome variable is EFFECT, and the possible outcomes are upheld (the court upholds an already standing law/decision), struck down as applied (the court does not uphold the standing law/decision for this specfic case only), or struck down on face (the court does not uphold the standing law/decision overall in all cases). If cases where ATT GEN = 1 and EFFECT = upheld.
 
@@ -28,7 +28,7 @@ judicial <- read_xlsx("/Users/autumnlee/PS-270-Final-Proj/judicial_review_of_con
 head(judicial)
 ```
 
-## Milestone 3
+### Milestone 3
 
 ```{r}
 milestone_3 <- judicial |>
@@ -37,7 +37,7 @@ milestone_3 <- judicial |>
 ```
 
 ```{r}
-milestone_4 <- milestone_3 |>
+milestone_3_1 <- milestone_3 |>
   ggplot(aes(x = n, y = `EFFECT` )) +
           geom_col() +
   labs(
@@ -45,6 +45,20 @@ milestone_4 <- milestone_3 |>
     x = "Number of Occurrences"
   )
 
-milestone_4
+milestone_3_1
 ```
 
+### Milestone 4
+Your article should contain one visualization and one analysis that attempts to answer your research question. There does not need to be a long discussion, but the results should be presented in either a second visualization or a nicely formatted table.
+
+
+```{r}
+judicial <- judicial |>
+  group_by(EFFECT) |>
+  mutate(Outcome = case_when(
+    EFFECT == "struck down as applied" ~ "Struck Down",
+    EFFECT == "struck down on face" ~ "Struck Down",
+    EFFECT == "struck down as face" ~ "Struck Down",
+    EFFECT == "upheld" ~ "Upheld"
+  ))
+```
