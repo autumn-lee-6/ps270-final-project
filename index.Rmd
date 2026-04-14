@@ -56,9 +56,31 @@ Your article should contain one visualization and one analysis that attempts to 
 judicial <- judicial |>
   group_by(EFFECT) |>
   mutate(Outcome = case_when(
-    EFFECT == "struck down as applied" ~ "Struck Down",
-    EFFECT == "struck down on face" ~ "Struck Down",
-    EFFECT == "struck down as face" ~ "Struck Down",
-    EFFECT == "upheld" ~ "Upheld"
+    EFFECT == "struck down as applied" & `ATT GEN` == 1 ~ "Struck Down with Att Gen",
+    EFFECT == "struck down as applied" & `ATT GEN` == 0 ~ "Struck Down without Att Gen",
+    EFFECT == "struck down on face" & `ATT GEN` == 1 ~ "Struck Down with Att Gen",
+    EFFECT == "struck down on face" & `ATT GEN` == 0 ~ "Struck Down without Att Gen",
+    EFFECT == "struck down as face" & `ATT GEN` == 1 ~ "Struck Down with Att Gen",
+    EFFECT == "struck down as face" & `ATT GEN` == 0 ~ "Struck Down without Att Gen",
+    EFFECT == "upheld" & `ATT GEN` == 1 ~ "Upheld with Att Gen",
+    EFFECT == "upheld" & `ATT GEN` == 0 ~ "Upheld without Att Gen"
   ))
 ```
+
+```{r}
+milestone_4 <- judicial |> 
+  group_by(`Outcome`) |>
+  summarize(n=n())
+```
+
+```{r}
+milestone_4_1 <- milestone_4 |>
+  ggplot(aes(x = Outcome, y = n)) +
+           geom_bar(stat = "identity", width = 1)
+```
+
+```{r}
+milestone_4_1
+```
+
+This graph is showing that there is a pattern where when an attorney general/DOJ member is present, the case is likely to be upheld. It seems that in general the Supreme Court upholds cases more often with or without an attorney general/DOJ member present.
