@@ -7,55 +7,71 @@ output:
     self_contained: false
 ---
 
+### Introduction
 
+My research question is to explore how  the presence of an Attorney General or Attorney from the Department of Justice (DOJ) affect whether the Supreme Court upholds or strikes down a statutory provision. This is important because evaluating how a member of the Department of Justice in attendance affects a justice's ruling could have more implications for how judges decide cases. If having a DOJ member present arguments sways a judge's opinion in favor of upholding a standing decision, it may be shown to be better to not have a DOJ member present during Supreme Court cases.
 
-### Milestone 1: Project thoughts
+My hypothesis is that if an AG/DOJ attorney is present during a Supreme Court hearing and decision, the Supreme Court will be more likely to uphold a statutory provision, because the Attorney General/DOJ attorney holds influence over the court to a certain degree and generally uphold pre-existing statutes based on law that is in effect.
 
-I am interested in exploring data related to judges, potentially elections in certain states, campaigns, and other related types of data.
+### Variable Legend
 
-### Milestone 2
+My explanatory variable is ATT GEN, which denotes if an attorney from the DOJ presented arguments at the hearing. My outcome variable is EFFECT, and the possible outcomes are upheld (the court upholds an already standing law/decision), struck down as applied (the court does not uphold the standing law/decision for this specfic case only), or struck down on face (the court does not uphold the standing law/decision overall in all cases). To support my hypothesis, the data would show that when ATT GEN = 1 and EFFECT = upheld the number of cases would be more than when ATT GEN = 1 and EFFECT = struck down as applied and EFFECT = struck down on/as face.
 
-My research question is how does the presence of an Attorney General (AG)/Attorney from the Department of Justice (DOJ) affect whether the Supreme Court upholds or strikes down a statutory provision? My hypothesis is that if an AG/DOJ attorney is present during a Supreme Court hearing and decision, the Supreme Court will be more likely to uphold a statutory provision, as the Attorney General/DOJ attorney holds influence over the court to a certain degree and are usually arguing for a statutory provision, rather than against it. My explanatory variable is ATT GEN, which denotes if an attorney from the DOJ presented arguments at the hearing. My outcome variable is EFFECT, and the possible outcomes are upheld (the court upholds an already standing law/decision), struck down as applied (the court does not uphold the standing law/decision for this specfic case only), or struck down on face (the court does not uphold the standing law/decision overall in all cases). If cases where ATT GEN = 1 and EFFECT = upheld.
+Explanatory Variable = ATT GEN
 
-```{r}
+- If an attorney from the DOJ presented arguments at the hearing
+
+- The possible outcomes are
+
+  - 1 (Attorney general or member of the Department of Justice presented arguments)
+  
+  - 0 (Attorney general or member of the Department of Justice did not present arguments)
+
+Outcome Variable = EFFECT
+
+- The possible outcomes are
+
+  - Upheld (the court upholds an already standing law/decision)
+  
+  - Struck down as applied (the court does not uphold the standing law/decision for this specific case only)
+  
+  - Struck down on face (the court does not uphold the standing law/decision overall in all cases)
+  
+### Graphs and Data
+
+```{r, echo = FALSE}
 library(readxl)
 library(tidyverse)
+library(modelsummary)
 ```
 
-```{r}
+```{r, echo = FALSE}
 judicial <- read_xlsx("/Users/autumnlee/PS-270-Final-Proj/judicial_review_of_congress_database_1789-2022.xlsx")
-
-head(judicial)
 ```
 
-### Milestone 3
-
-```{r}
+```{r, echo = FALSE}
 milestone_3 <- judicial |>
   group_by(`ATT GEN`, `EFFECT`) |>
   summarize(n=n(), .groups = "drop")
 ```
 
-```{r}
+```{r, echo = FALSE}
 milestone_3_1 <- milestone_3 |>
   ggplot(aes(x = n, y = `EFFECT` )) +
           geom_col() +
   labs(
     y = "Effect",
-    x = "Number of Occurrences"
+    x = "Number of Occurrences",
+    title = "Types of Effects"
   )
 
 milestone_3_1
 ```
 
-### Milestone 4
-Your article should contain one visualization and one analysis that attempts to answer your research question. There does not need to be a long discussion, but the results should be presented in either a second visualization or a nicely formatted table.
-
-
-```{r}
+```{r, echo = FALSE}
 judicial <- judicial |>
   group_by(EFFECT) |>
-  mutate(Outcome = case_when(
+  mutate(OUTCOME = case_when(
     EFFECT == "struck down as applied" & `ATT GEN` == 1 ~ "Struck Down with Att Gen",
     EFFECT == "struck down as applied" & `ATT GEN` == 0 ~ "Struck Down without Att Gen",
     EFFECT == "struck down on face" & `ATT GEN` == 1 ~ "Struck Down with Att Gen",
@@ -64,23 +80,46 @@ judicial <- judicial |>
     EFFECT == "struck down as face" & `ATT GEN` == 0 ~ "Struck Down without Att Gen",
     EFFECT == "upheld" & `ATT GEN` == 1 ~ "Upheld with Att Gen",
     EFFECT == "upheld" & `ATT GEN` == 0 ~ "Upheld without Att Gen"
+  ),
+  OUTCOME_NUMERICAL = case_when(
+    OUTCOME == "Struck Down with Att Gen" ~ 0,
+    OUTCOME == "Upheld with Att Gen" ~ 1,
   ))
 ```
 
-```{r}
+### Results
+
+```{r, echo = FALSE}
 milestone_4 <- judicial |> 
-  group_by(`Outcome`) |>
+  group_by(`OUTCOME`) |>
   summarize(n=n())
 ```
 
-```{r}
+```{r, echo = FALSE}
 milestone_4_1 <- milestone_4 |>
-  ggplot(aes(x = Outcome, y = n)) +
-           geom_bar(stat = "identity", width = 1)
-```
+  ggplot(aes(x = OUTCOME, y = n)) +
+           geom_bar(stat = "identity", width = .5) +
+  labs(
+    x = "Ruling",
+    y = "Number of Occurrences",
+    title = "Outcome of Cases Based on DOJ Member Argument Presentations"
+  )
 
-```{r}
 milestone_4_1
 ```
 
-This graph is showing that there is a pattern where when an attorney general/DOJ member is present, the case is likely to be upheld. It seems that in general the Supreme Court upholds cases more often with or without an attorney general/DOJ member present.
+```{r, echo = FALSE}
+attgen_reg <- lm(`OUTCOME_NUMERICAL` ~ `ATT GEN`, data = judicial)
+
+modelsummary(attgen_reg, digits = 2)
+```
+
+### Conclusion
+
+This graph is showing that there is a pattern where when an attorney general/DOJ member is present, the case is likely to be upheld. According to the main coefficient of interest from the regression, there is a 74% chance that if a case were to be held with an attorney general, the statute the case follows would be upheld.
+
+It seems that in general the Supreme Court upholds cases more often with or without an attorney general/DOJ member present. This data should not be held causally. The rates at which a case is upheld in when a DOJ member is or is not present is at a similar proportion to when a DOJ member is not present.
+
+This data can support my hypothesis, however I do not believe it is substantive enough to demonstrate a direct causation. It may be that the court decides to uphold cases more often in general since prior courts have already argued for a similar or the same statute.
+
+In terms of limitations, if I had more time there are a lot more factors that I could have compared with besides ATT GEN to be more sure if the only factor affecting the rulings is if an attorney general/member of the DOJ is present. I could have compared OUTCOME to the decade or time to decision, which I feel like could also affect the ruling greatly.
